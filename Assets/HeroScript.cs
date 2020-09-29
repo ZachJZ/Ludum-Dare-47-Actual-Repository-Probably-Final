@@ -11,12 +11,12 @@ public class HeroScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (pSpeed == null)
+        if (pSpeed == 0)
         {
             pSpeed = 5;
         }   
 
-        if (pHealth == null)
+        if (pHealth == 0)
         {
             pHealth = 3;
         }
@@ -25,6 +25,9 @@ public class HeroScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKey(KeyCode.W))
+        {
+            //move up
+        }
     }
 }
