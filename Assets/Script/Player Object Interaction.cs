@@ -30,8 +30,8 @@ public class PlayerObjectInteraction : MonoBehaviour
     {
         var centeredStyle = GUI.skin.GetStyle("Label");
         centeredStyle.alignment = TextAnchor.UpperCenter;
-        GUI.Label(Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 100, 50), "Press F to pick up", centeredStyle);
-        if (Input.GetKey(KeyCode.F)
+        GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 100, 50), "Press F to pick up", centeredStyle);
+        if (Input.GetKey(KeyCode.F))
         {
             if (col.gameObject.tag == "punkItem")
             {
@@ -58,7 +58,7 @@ public class PlayerObjectInteraction : MonoBehaviour
                 hasKeys = true;
             }
 
-            Destroy(col.gameObject) //if player gets destroyed instead of item, this is the reason
+            Destroy(col.gameObject); //if player gets destroyed instead of item, this is the reason
                 //play pick up sound, maybe add 
         }
     }

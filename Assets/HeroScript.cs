@@ -26,8 +26,13 @@ public class HeroScript : MonoBehaviour
     [SerializeField]
     public GameObject pauseMenu;
 
-    bool doorOpen;
-    float doorTimer;
+    bool atBottom;
+    bool atTop;
+
+    GameObject currentPickup;
+
+    interactSctipt myInteract;
+    //need list script to keep track of things
 
 
     // Start is called before the first frame update
@@ -37,46 +42,101 @@ public class HeroScript : MonoBehaviour
 
         if (pSpeed == 0)
         {
-            pSpeed = 5;
+            pSpeed = 18;
         }
 
         myRB = GetComponent<Rigidbody2D>();
+
+        currentPickup = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (atTop)
+            {
+                transform.position = BottomDoor.transform.position;
+                atTop = false;
+
+            }
+            else if (atBottom)
+            {
+                transform.position = TopDoor.transform.position;
+                atBottom = false;
+            }
+        }
+
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    print("currentPickUp = " + currentPickup.name + "");
+        //}
+
         Controls();
-        DoorReset();
+
+        if (currentPickup != null)
+        {
+            pickMeUp();
+        }
+
+        myRB.MovePosition(myRB.position + movement * pSpeed * Time.deltaTime);
     }
 
-    void FixedUpdate()
-    {
-
-        myRB.MovePosition(myRB.position + movement * pSpeed * Time.fixedDeltaTime);
-
-    }
-
-    private void OnTriggerStay2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D col)
     {
         {
             //door
-            if (col.gameObject.name == "Top Door" && doorOpen == true)
+            if (col.gameObject.name == "Top Door")
             {
-                if (Input.GetKey(KeyCode.W))
-                {
-                    transform.position = BottomDoor.transform.position;
-                }
+                atTop = true;
             }
 
             if (col.gameObject.name == "Bottom Door")
             {
-                if (Input.GetKey(KeyCode.W))
-                {
-                    transform.position = TopDoor.transform.position;
-                }
+                atBottom = true;
+            }
+
+            if (col.gameObject.name == "Front Door")
+            {
+                //end day and log items
+                //fade screen
+                //post message
+                //restart day
+            }
+
+            if (col.gameObject.name == "Interactable")
+            {
+                currentPickup = col.gameObject;
+                myInteract = currentPickup.GetComponent<interactSctipt>();
+
+                //display message
+                myInteract.SetText(true);
             }
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.name == "Top Door")
+        {
+            atTop = false;
+        }
+
+        if (col.gameObject.name == "Bottom Door")
+        {
+            atBottom = false;
+        }
+
+        if (col.gameObject.name == "Interactable")
+        {
+            myInteract.SetText(false);
+
+            currentPickup = null;
+            myInteract = null;
+        }
+
+
     }
 
     void Controls()
@@ -98,12 +158,38 @@ public class HeroScript : MonoBehaviour
                 PauseGame();
             }
         }
-
     }
 
     void Movement()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
+    }
+
+    void pickMeUp()
+    {
+
+        //check item
+        //turn on text
+        //press button > pick up item
+            //remove text
+            //add item to day's list
+        //leave item
+            //remove text
+
+
+        if (currentPickup.GetComponent<keysItem>())
+        {
+            //add keys to list that day's list
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                print("got into the pickMeUp zone!");
+                //currentPickup.GetComponent
+                //set currentpickup to null
+
+                //delete keys
+
+            }
+        }
     }
 
     public void PauseGame()
@@ -124,23 +210,10 @@ public class HeroScript : MonoBehaviour
         }
     }
 
+    //SETTERS 
+
     public void SetPlaying(bool gameOver)
     {
         gaming = gameOver;
     }
-
-    void DoorReset()
-    {
-        doorTimer += Time.deltaTime;
-        if (doorTimer > 2.0f)
-        {
-            doorOpen = true;
-        }
-        else
-        {
-            doorOpen = false;
-        }
-    }
-
-
 }

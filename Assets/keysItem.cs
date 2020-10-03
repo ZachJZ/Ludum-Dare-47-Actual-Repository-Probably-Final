@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyScript : MonoBehaviour
+public class keysItem : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        //comment
+        
     }
 
     // Update is called once per frame
