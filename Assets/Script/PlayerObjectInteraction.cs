@@ -39,7 +39,7 @@ public class PlayerObjectInteraction : MonoBehaviour
             }
             if (col.gameObject.tag == "dndItem")
             {
-                dndProgress += 1;
+                dndProgress++;
             }
             if (col.gameObject.tag == "gamejamItem")
             {
@@ -60,6 +60,14 @@ public class PlayerObjectInteraction : MonoBehaviour
 
             Destroy(col.gameObject); //if player gets destroyed instead of item, this is the reason
                 //play pick up sound, maybe add 
+        }
+    }
+
+    public void IncrementItem(string ItemClass)
+    {
+       if (ItemClass == "punk")
+        {
+            punkProgress++;
         }
     }
 }
