@@ -9,6 +9,8 @@ public class HeroScript : MonoBehaviour
     public GameObject TopDoor;
     public GameObject BottomDoor;
 
+    PlayerObjectInteraction myPOI;
+
     //movement var
     [SerializeField]
     int pSpeed;
@@ -38,6 +40,7 @@ public class HeroScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        myPOI = FindObjectOfType<PlayerObjectInteraction>().GetComponent<PlayerObjectInteraction>();
         gaming = true; 
 
         if (pSpeed == 0)
@@ -166,8 +169,7 @@ public class HeroScript : MonoBehaviour
     }
 
     void pickMeUp()
-    {
-
+    { 
         //check item
         //turn on text
         //press button > pick up item
@@ -190,13 +192,14 @@ public class HeroScript : MonoBehaviour
 
             }
         }
-        else if (currentPickup.GetComponent<skullteeItem>())
+        else if (currentPickup.GetComponent<punkItem>())
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                print("got into the skulltee zone!");
+                print("Picked up!");
                 //currentPickup.GetComponent
                 //set currentpickup to null
+                myPOI.IncrementItem("punk");
 
                 //delete skulltee
 
