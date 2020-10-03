@@ -182,13 +182,26 @@ public class HeroScript : MonoBehaviour
             //add keys to list that day's list
             if (Input.GetKeyDown(KeyCode.W))
             {
-                print("got into the pickMeUp zone!");
+                print("got into the keys zone!");
                 //currentPickup.GetComponent
                 //set currentpickup to null
 
                 //delete keys
 
             }
+        }
+        else if (currentPickup.GetComponent<skullteeItem>())
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                print("got into the skulltee zone!");
+                //currentPickup.GetComponent
+                //set currentpickup to null
+
+                //delete skulltee
+
+            }
+
         }
     }
 
