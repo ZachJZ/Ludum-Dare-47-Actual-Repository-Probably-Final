@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class skullteeItem : MonoBehaviour
+public class dndItem : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

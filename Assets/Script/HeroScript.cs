@@ -169,7 +169,7 @@ public class HeroScript : MonoBehaviour
     }
 
     void pickMeUp()
-    { 
+    {
         //check item
         //turn on text
         //press button > pick up item
