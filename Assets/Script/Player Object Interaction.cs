@@ -28,37 +28,35 @@ public class PlayerObjectInteraction : MonoBehaviour
     }
     private void OnTriggerStay(Collider col) //each item will have a collider in the space you would move to pick it up
     {
-        var centeredStyle = GUI.skin.GetStyle("Label");
-        centeredStyle.alignment = TextAnchor.UpperCenter;
-        GUI.Label(Rect(Screen.width / 2 - 50, Screen.height / 2 - 25, 100, 50), "Press F to pick up", centeredStyle);
-        if (Input.GetKey(KeyCode.F)
+        GUI.Box(new Rect((Screen.width) / 2 - (Screen.width) / 8, (Screen.height) / 2 - (Screen.height) / 8, (Screen.width) / 4, (Screen.height) / 4), "Press F to pick up");
+        if (Input.GetKey(KeyCode.F))
         {
-            if (col.gameObject.tag == "punkItem")
+            if (col.gameObject.name == "punkItem")
             {
                 punkProgress += 1;
             }
-            if (col.gameObject.tag == "dndItem")
+            if (col.gameObject.name == "dndItem")
             {
                 dndProgress += 1;
             }
-            if (col.gameObject.tag == "gamejamItem")
+            if (col.gameObject.name == "gamejamItem")
             {
                 gamejamProgress += 1;
             }
-            if (col.gameObject.tag == "prepItem")
+            if (col.gameObject.name == "prepItem")
             {
                 prepProgress += 1;
             }
-            if (col.gameObject.tag == "energyItem")
+            if (col.gameObject.name == "energyItem")
             {
                 energy += 1;
             }
-            if (col.gameObject.tag == "keys")
+            if (col.gameObject.name == "keys")
             {
                 hasKeys = true;
             }
 
-            Destroy(col.gameObject) //if player gets destroyed instead of item, this is the reason
+            Destroy(col.gameObject); //if player gets destroyed instead of item, this is the reason
                 //play pick up sound, maybe add 
         }
     }
