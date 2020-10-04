@@ -31,9 +31,15 @@ public class HeroScript : MonoBehaviour
     bool atBottom;
     bool atTop;
 
+    bool exitDoor;
+    bool dayOver;
+
     GameObject currentPickup;
 
+    //myinteract is set in the ontrigger funtions as it's called
     interactSctipt myInteract;
+    FadingScript myFade;
+    TimerScript myTimer;
     //need list script to keep track of things
 
 
@@ -41,6 +47,9 @@ public class HeroScript : MonoBehaviour
     void Start()
     {
         myPOI = FindObjectOfType<PlayerObjectInteraction>().GetComponent<PlayerObjectInteraction>();
+        myFade = FindObjectOfType<FadingScript>();
+        myTimer = FindObjectOfType<TimerScript>();
+
         gaming = true; 
 
         if (pSpeed == 0)
@@ -51,6 +60,7 @@ public class HeroScript : MonoBehaviour
         myRB = GetComponent<Rigidbody2D>();
 
         currentPickup = null;
+        dayOver = false;
     }
 
     // Update is called once per frame
@@ -69,6 +79,23 @@ public class HeroScript : MonoBehaviour
                 transform.position = TopDoor.transform.position;
                 atBottom = false;
             }
+
+            if (exitDoor)
+            {
+                dayOver = true;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            dayOver = true;
+        }
+
+        if (dayOver)
+        {
+            gaming = false;
+            myTimer.StartTimer(false);
+            myFade.Fade2Black();
         }
 
         //if (Input.GetKeyDown(KeyCode.R))
@@ -95,13 +122,14 @@ public class HeroScript : MonoBehaviour
                 atTop = true;
             }
 
-            if (col.gameObject.name == "Bottom Door")
+            else if(col.gameObject.name == "Bottom Door")
             {
                 atBottom = true;
             }
 
-            if (col.gameObject.name == "Front Door")
+            else if(col.gameObject.name == "Front Door")
             {
+                exitDoor = true;
                 //end day and log items
                 //fade screen
                 //post message
@@ -126,9 +154,18 @@ public class HeroScript : MonoBehaviour
             atTop = false;
         }
 
-        if (col.gameObject.name == "Bottom Door")
+        else if (col.gameObject.name == "Bottom Door")
         {
             atBottom = false;
+        }
+
+        else if (col.gameObject.name == "Front Door")
+        {
+            exitDoor = false;
+            //end day and log items
+            //fade screen
+            //post message
+            //restart day
         }
 
         if (col.gameObject.name == "Interactable")
@@ -173,38 +210,40 @@ public class HeroScript : MonoBehaviour
         //check item
         //turn on text
         //press button > pick up item
-            //remove text
-            //add item to day's list
+        //remove text
+        //add item to day's list
         //leave item
-            //remove text
+        //remove text
 
-
-        if (currentPickup.GetComponent<keysItem>())
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            //add keys to list that day's list
-            if (Input.GetKeyDown(KeyCode.W))
+            if (currentPickup.GetComponent<keysItem>())
             {
+                //add keys to list that day's list
                 print("got into the keys zone!");
                 //currentPickup.GetComponent
                 //set currentpickup to null
-
                 //delete keys
-
             }
-        }
-        else if (currentPickup.GetComponent<punkItem>())
-        {
-            if (Input.GetKeyDown(KeyCode.W))
+            else if (currentPickup.GetComponent<punkItem>())
             {
                 print("Picked up!");
-                //currentPickup.GetComponent
-                //set currentpickup to null
                 myPOI.IncrementItem("punk");
 
                 //delete skulltee
+            }
+            else if (currentPickup.GetComponent<dndItem>())
+            {
 
             }
+            else if (currentPickup.GetComponent<jamItem>())
+            {
 
+            }
+            else if (currentPickup.GetComponent<energyItem>())
+            {
+
+            }
         }
     }
 
@@ -231,5 +270,19 @@ public class HeroScript : MonoBehaviour
     public void SetPlaying(bool gameOver)
     {
         gaming = gameOver;
+    }
+
+    public void SetTimerDone()
+    {
+        dayOver = true;
+    }
+
+    public void ResetDay()
+    {
+        //timer back up
+        //player position
+        //progress items
+        //respawn items
+
     }
 }

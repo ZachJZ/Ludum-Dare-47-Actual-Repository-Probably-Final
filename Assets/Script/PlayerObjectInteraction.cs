@@ -9,10 +9,10 @@ using UnityEngine.AI;
 
 public class PlayerObjectInteraction : MonoBehaviour
 {
-    public int punkProgress=0;
-    public int dndProgress =0;
-    public int gamejamProgress =0;
-    public int prepProgress = 0;
+    public int punkProgress = 0;
+    public int dndProgress = 0;
+    public int gamejamProgress = 0;
+    //public int prepProgress = 0;
     public int energy = 0;
     public bool hasKeys;
     // Start is called before the first frame update
@@ -30,7 +30,7 @@ public class PlayerObjectInteraction : MonoBehaviour
 
     public void IncrementItem(string ItemClass)
     {
-       switch (ItemClass) 
+       switch (ItemClass)
        {
             case "punk":
                 punkProgress++;     break;
@@ -40,15 +40,15 @@ public class PlayerObjectInteraction : MonoBehaviour
                 gamejamProgress++;  break;
             case "energy":
                 energy++;           break;
-            case "prep":
-                prepProgress++;     break;
+            //case "prep":
+            //    prepProgress++;     break;
             case "keys":
                 hasKeys = true;     break;
        }
     }
     private void startDay()
     {
-        prepProgress = 0;
+        //prepProgress = 0;
         energy = 0;
         hasKeys = false;
     }
