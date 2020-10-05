@@ -83,10 +83,7 @@ public class HeroScript : MonoBehaviour
         winningJam = false;
         gaming = true; 
 
-        if (pSpeed == 0)
-        {
-            pSpeed = 15;
-        }
+        pSpeed = 10;
 
         myRB = GetComponent<Rigidbody2D>();
 
