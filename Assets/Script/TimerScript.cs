@@ -49,6 +49,12 @@ public class TimerScript : MonoBehaviour
         appendTimer();
     }
 
+    public void ResetDay()
+    {
+        resetTimer();
+        StartTimer(true);
+    }
+
     public void resetTimer()
     {
         liveTimer = maxTime;

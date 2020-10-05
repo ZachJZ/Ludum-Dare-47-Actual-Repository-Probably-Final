@@ -18,12 +18,6 @@ public class interactSctipt : MonoBehaviour
         SetText(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetText(bool setTo)
     {
         interactText.SetActive(setTo);

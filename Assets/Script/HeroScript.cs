@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class HeroScript : MonoBehaviour
 {
@@ -11,6 +13,13 @@ public class HeroScript : MonoBehaviour
 
     PlayerObjectInteraction myPOI;
 
+    public Text punkText;
+    public Text dndText;
+    public Text jamText;
+    public Text giveUpText;
+
+    public Text myDayLog;
+
     //movement var
     [SerializeField]
     int pSpeed;
@@ -20,11 +29,13 @@ public class HeroScript : MonoBehaviour
     [SerializeField]
     Rigidbody2D myRB;
 
+    //Day Start vars
+    [SerializeField]
+    GameObject startPos;
 
     //Pause menu var
     bool gaming;
     bool pausedGame;
-
     [SerializeField]
     public GameObject pauseMenu;
 
@@ -34,10 +45,13 @@ public class HeroScript : MonoBehaviour
     bool exitDoor;
     bool dayOver;
 
+    public GameObject endDayMenu;
+
     GameObject currentPickup;
 
     //myinteract is set in the ontrigger funtions as it's called
     interactSctipt myInteract;
+    needKeysScript needKeys;
     FadingScript myFade;
     TimerScript myTimer;
     //need list script to keep track of things
@@ -49,6 +63,7 @@ public class HeroScript : MonoBehaviour
         myPOI = FindObjectOfType<PlayerObjectInteraction>().GetComponent<PlayerObjectInteraction>();
         myFade = FindObjectOfType<FadingScript>();
         myTimer = FindObjectOfType<TimerScript>();
+        needKeys = FindObjectOfType<needKeysScript>();
 
         gaming = true; 
 
@@ -82,26 +97,23 @@ public class HeroScript : MonoBehaviour
 
             if (exitDoor)
             {
-                dayOver = true;
+                if (myPOI.hasKeys)
+                {
+                    dayOver = true;
+                }
             }
         }
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            dayOver = true;
+            print("StartPos is " + startPos.transform.position);
+            gameObject.transform.position = startPos.transform.position;
         }
 
         if (dayOver)
         {
-            gaming = false;
-            myTimer.StartTimer(false);
-            myFade.Fade2Black();
+            EndDay();
         }
-
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    print("currentPickUp = " + currentPickup.name + "");
-        //}
 
         Controls();
 
@@ -129,19 +141,16 @@ public class HeroScript : MonoBehaviour
 
             else if(col.gameObject.name == "Front Door")
             {
+                if (!myPOI.hasKeys)
+                    needKeys.SetKeysText(true);
+
                 exitDoor = true;
-                //end day and log items
-                //fade screen
-                //post message
-                //restart day
             }
 
             if (col.gameObject.name == "Interactable")
             {
                 currentPickup = col.gameObject;
                 myInteract = currentPickup.GetComponent<interactSctipt>();
-
-                //display message
                 myInteract.SetText(true);
             }
         }
@@ -162,6 +171,7 @@ public class HeroScript : MonoBehaviour
         else if (col.gameObject.name == "Front Door")
         {
             exitDoor = false;
+            needKeys.SetKeysText(false);
             //end day and log items
             //fade screen
             //post message
@@ -207,42 +217,61 @@ public class HeroScript : MonoBehaviour
 
     void pickMeUp()
     {
-        //check item
-        //turn on text
-        //press button > pick up item
-        //remove text
-        //add item to day's list
-        //leave item
-        //remove text
-
         if (Input.GetKeyDown(KeyCode.W))
         {
             if (currentPickup.GetComponent<keysItem>())
             {
                 //add keys to list that day's list
-                print("got into the keys zone!");
-                //currentPickup.GetComponent
+                myPOI.IncrementItem("keys");
+                //delete item
+                currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
-                //delete keys
+                currentPickup = null;
             }
             else if (currentPickup.GetComponent<punkItem>())
             {
-                print("Picked up!");
+                //add keys to list that day's list
                 myPOI.IncrementItem("punk");
-
-                //delete skulltee
+                //delete item
+                currentPickup.gameObject.SetActive(false);
+                //set currentpickup to null
+                currentPickup = null;
             }
             else if (currentPickup.GetComponent<dndItem>())
             {
-
+                //add keys to list that day's list
+                myPOI.IncrementItem("dnd");
+                //delete item
+                currentPickup.gameObject.SetActive(false);
+                //set currentpickup to null
+                currentPickup = null;
             }
             else if (currentPickup.GetComponent<jamItem>())
             {
-
+                //add keys to list that day's list
+                myPOI.IncrementItem("jam");
+                //delete item
+                currentPickup.gameObject.SetActive(false);
+                //set currentpickup to null
+                currentPickup = null;
             }
             else if (currentPickup.GetComponent<energyItem>())
             {
-
+                //add keys to list that day's list
+                myPOI.IncrementItem("energy");
+                //delete item
+                currentPickup.gameObject.SetActive(false);
+                //set currentpickup to null
+                currentPickup = null;
+            }
+            else if (currentPickup.GetComponent<junkItem>())
+            {
+                //add keys to list that day's list
+                //myPOI.IncrementItem("energy");
+                //delete item
+                currentPickup.gameObject.SetActive(false);
+                //set currentpickup to null
+                currentPickup = null;
             }
         }
     }
@@ -265,6 +294,64 @@ public class HeroScript : MonoBehaviour
         }
     }
 
+    public void NewDay()
+    {
+        dayOver = false;
+        //player position
+        gaming = true;
+        //progress items
+        endDayMenu.SetActive(false);
+        //spawn/respawn items
+        myPOI.ItemSpawning();
+        //fade screen back in
+        myFade.Fade2Clear();
+        //timer back up
+        myTimer.ResetDay();
+
+        gameObject.transform.position = startPos.transform.position;
+    }
+
+    void EndDay()
+    {
+        if (!myPOI.hasEnergy)
+        {
+            myPOI.AddGiveUp();
+        }
+
+        gaming = false;
+        myTimer.StartTimer(false);
+        myFade.Fade2Black();
+        myPOI.ItemDespawn();
+        myPOI.hasKeys = false;
+
+        if (myPOI.GetPunkProg() == 3)
+        {
+            //punk win
+        }
+        else if (myPOI.GetDNDProg() == 3)
+        {
+            //dnd win
+        }
+        else if (myPOI.GetJamProg() == 3)
+        {
+            //jam win
+        }
+        else if (myPOI.GetGiveUpProg() == 5)
+        {
+            //loss
+        }
+        else
+        {
+            giveUpText.text = "Giving Up: " + myPOI.GetGiveUpProg() + "/5";
+            punkText.text = "Concert: " + myPOI.GetPunkProg() + "/3";
+            jamText.text = "Game Jam: " + myPOI.GetJamProg() + "/3";
+            dndText.text = "D&D Night: " + myPOI.GetDNDProg() + "/3";
+        }
+
+        endDayMenu.SetActive(true);
+
+    }
+
     //SETTERS 
 
     public void SetPlaying(bool gameOver)
@@ -277,12 +364,6 @@ public class HeroScript : MonoBehaviour
         dayOver = true;
     }
 
-    public void ResetDay()
-    {
-        //timer back up
-        //player position
-        //progress items
-        //respawn items
 
-    }
+
 }
