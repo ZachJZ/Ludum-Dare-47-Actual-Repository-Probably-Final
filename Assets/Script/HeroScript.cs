@@ -17,8 +17,13 @@ public class HeroScript : MonoBehaviour
     public Text dndText;
     public Text jamText;
     public Text giveUpText;
-
-    public Text myDayLog;
+    public GameObject JamWin;
+    public GameObject PunkWin;
+    public GameObject DNDWin;
+    public GameObject iLost;
+    public GameObject myHUD;
+    //public Text myDayLog;
+    public Animator myAnim;
 
     //movement var
     [SerializeField]
@@ -45,6 +50,8 @@ public class HeroScript : MonoBehaviour
     bool exitDoor;
     bool dayOver;
 
+    bool winningJam;
+
     public GameObject endDayMenu;
 
     GameObject currentPickup;
@@ -56,6 +63,10 @@ public class HeroScript : MonoBehaviour
     TimerScript myTimer;
     //need list script to keep track of things
 
+    //Sound
+    JamMaster myJam;
+    CurtainMaster mySM;
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,18 +75,28 @@ public class HeroScript : MonoBehaviour
         myFade = FindObjectOfType<FadingScript>();
         myTimer = FindObjectOfType<TimerScript>();
         needKeys = FindObjectOfType<needKeysScript>();
+        myAnim = GetComponent<Animator>();
+        myJam = FindObjectOfType<JamMaster>();
+        myJam.setLoopOff();
+        mySM = FindObjectOfType<CurtainMaster>();
 
+        winningJam = false;
         gaming = true; 
 
         if (pSpeed == 0)
         {
-            pSpeed = 18;
+            pSpeed = 15;
         }
 
         myRB = GetComponent<Rigidbody2D>();
 
         currentPickup = null;
         dayOver = false;
+
+        iLost.SetActive(false);
+        JamWin.SetActive(false);
+        PunkWin.SetActive(false);
+        DNDWin.SetActive(false);
     }
 
     // Update is called once per frame
@@ -197,11 +218,6 @@ public class HeroScript : MonoBehaviour
        
             Movement();
 
-            if (Input.GetKey(KeyCode.S))
-            {
-                //interact
-            }
-
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 pausedGame = !pausedGame;
@@ -213,6 +229,29 @@ public class HeroScript : MonoBehaviour
     void Movement()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
+        if (movement.x == 0)
+        {
+            myAnim.SetBool("doRun", false);
+        }
+        else if (movement.x > 0)
+        {
+            //go right
+            print("Running right");
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            //GetComponent<SpriteRenderer>().flipX = true;
+            myAnim.SetBool("doRun", true);
+
+        }
+        else if (movement.x < 0)
+        {
+            //go left
+            print("Running left");
+            gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            //GetComponent<SpriteRenderer>().flipX = true;
+            myAnim.SetBool("doRun", true);
+
+        }
+
     }
 
     void pickMeUp()
@@ -227,6 +266,7 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(3);
             }
             else if (currentPickup.GetComponent<punkItem>())
             {
@@ -236,6 +276,8 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(1);
+
             }
             else if (currentPickup.GetComponent<dndItem>())
             {
@@ -245,6 +287,8 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(1);
+
             }
             else if (currentPickup.GetComponent<jamItem>())
             {
@@ -254,6 +298,8 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(1);
+
             }
             else if (currentPickup.GetComponent<energyItem>())
             {
@@ -263,6 +309,9 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(3);
+
+
             }
             else if (currentPickup.GetComponent<junkItem>())
             {
@@ -272,6 +321,7 @@ public class HeroScript : MonoBehaviour
                 currentPickup.gameObject.SetActive(false);
                 //set currentpickup to null
                 currentPickup = null;
+                myJam.PlaySound(0);
             }
         }
     }
@@ -308,37 +358,44 @@ public class HeroScript : MonoBehaviour
         //timer back up
         myTimer.ResetDay();
 
-        gameObject.transform.position = startPos.transform.position;
+        myJam.StartSong(0);
     }
 
     void EndDay()
     {
-        if (!myPOI.hasEnergy)
+        if (!myPOI.hasEnergy || exitDoor == false)
         {
             myPOI.AddGiveUp();
         }
 
+        myJam.StopSong();
         gaming = false;
         myTimer.StartTimer(false);
         myFade.Fade2Black();
         myPOI.ItemDespawn();
         myPOI.hasKeys = false;
 
+        gameObject.transform.position = startPos.transform.position;
+
         if (myPOI.GetPunkProg() == 3)
         {
-            //punk win
+            mySM.LoadPunk();
+            //myHUD.SetActive(false);
         }
         else if (myPOI.GetDNDProg() == 3)
         {
-            //dnd win
+            mySM.LoadDND();
+            //myHUD.SetActive(false);
         }
         else if (myPOI.GetJamProg() == 3)
         {
-            //jam win
+            mySM.LoadLD();
+            //myHUD.SetActive(false);
         }
+
         else if (myPOI.GetGiveUpProg() == 5)
         {
-            //loss
+            mySM.LoadLoss();
         }
         else
         {
@@ -346,10 +403,8 @@ public class HeroScript : MonoBehaviour
             punkText.text = "Concert: " + myPOI.GetPunkProg() + "/3";
             jamText.text = "Game Jam: " + myPOI.GetJamProg() + "/3";
             dndText.text = "D&D Night: " + myPOI.GetDNDProg() + "/3";
+            endDayMenu.SetActive(true);
         }
-
-        endDayMenu.SetActive(true);
-
     }
 
     //SETTERS 
@@ -363,6 +418,12 @@ public class HeroScript : MonoBehaviour
     {
         dayOver = true;
     }
+
+    public float SetVolume(float newVol)
+    {
+        return Mathf.Clamp(newVol, 0f, 1f);
+    }
+
 
 
 

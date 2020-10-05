@@ -22,6 +22,25 @@ public class CurtainMaster : MonoBehaviour
         SceneManager.LoadScene("Title");
     }
 
+    public void LoadDND()
+    {
+        SceneManager.LoadScene("DNDScene");
+    }
+    public void LoadLD()
+    {
+        SceneManager.LoadScene("LDScene");
+    }
+    public void LoadPunk()
+    {
+        SceneManager.LoadScene("PunkScene");
+    }
+    public void LoadLoss()
+    {
+        SceneManager.LoadScene("LossScene");
+    }
+
+
+
     public void QuitGame()
     {
         Application.Quit();

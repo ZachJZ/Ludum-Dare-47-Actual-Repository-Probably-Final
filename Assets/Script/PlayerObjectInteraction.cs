@@ -109,11 +109,11 @@ public class PlayerObjectInteraction : MonoBehaviour
     public void ItemDespawn()
     {
         //punk item
-        punkItems[punkProgress].SetActive(false);
+        punkItems[Mathf.Clamp(punkProgress, 0, 2)].SetActive(false);
         //dnd item
-        dndItems[dndProgress].SetActive(false);
+        dndItems[Mathf.Clamp(dndProgress, 0,2)].SetActive(false);
         //jam item
-        jamItems[jamProgress].SetActive(false);
+        jamItems[Mathf.Clamp(jamProgress, 0, 2)].SetActive(false);
         //energy item
         for (int i = 0; i < 3; i++)
         {

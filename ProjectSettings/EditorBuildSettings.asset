@@ -11,4 +11,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HomeScene.unity
     guid: 54b05cb294054ff47936655c3e7f7b35
+  - enabled: 1
+    path: Assets/Scenes/DNDScene.unity
+    guid: 9899b30361b2089428d1ad4389adf250
+  - enabled: 1
+    path: Assets/Scenes/LDScene.unity
+    guid: 6f9b6e1f9d5546a42b5964469a5f7a60
+  - enabled: 1
+    path: Assets/Scenes/PunkScene.unity
+    guid: 386ef59a5be0a2842bda2fed06e79615
+  - enabled: 1
+    path: Assets/Scenes/LossScene.unity
+    guid: b77985f3badef9643a13fed0da6484bb
   m_configObjects: {}
