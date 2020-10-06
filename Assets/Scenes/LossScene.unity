@@ -148,7 +148,7 @@ RectTransform:
   m_GameObject: {fileID: 29758013}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.1158826, y: 1.1158826, z: 1.1158826}
   m_Children:
   - {fileID: 1321249447}
   - {fileID: 1044741394}
@@ -539,7 +539,7 @@ RectTransform:
   m_GameObject: {fileID: 236315937}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.1158826, y: 1.1158826, z: 1.1158826}
   m_Children:
   - {fileID: 2083516755}
   - {fileID: 705093565}
@@ -549,7 +549,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 295, y: 496}
+  m_AnchoredPosition: {x: 108, y: 193}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &256167844
@@ -762,9 +762,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1587587025}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: set_volume
+      - m_Target: {fileID: 1587587027}
+        m_TargetAssemblyTypeName: audioSet, Assembly-CSharp
+        m_MethodName: SetVol
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1624,6 +1624,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1587587026}
   - component: {fileID: 1587587025}
+  - component: {fileID: 1587587027}
   m_Layer: 0
   m_Name: Audio Source
   m_TagString: Untagged
@@ -1643,7 +1644,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f65c190cf5dc41e43a464403df70e5d0, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1741,6 +1742,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1587587027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587587024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea8ae54ef619c9c4fb5fea93a5303599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1706887462
 GameObject:
   m_ObjectHideFlags: 0
